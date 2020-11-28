@@ -1,0 +1,39 @@
+@baseUrl=http://localhost:8080/movies
+@id={{create.response.body.id}}
+
+# @name getAll
+GET {{baseUrl}}
+
+###
+
+# @name create
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "name": "Trainspotting",
+  "releasedAt": "1996-08-09",
+  "runtime": "93"
+}
+###
+
+# @name getOne
+GET {{baseUrl}}/{{id}}
+
+###
+
+# @name update
+PUT {{baseUrl}}/{{id}}
+
+{
+  "name": "Transporter",
+  "synopsis": "Frank Martin, who transports packages for unknown clients, is asked to move a package that soon begins moving, and complications arise.",
+  "releasedAt": "2002-11-10",
+  "runtime": 92
+}
+###
+
+# @name remove
+DELETE {{baseUrl}}/{{id}}
+
+###
