@@ -11,9 +11,9 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-  "name": "Trainspotting",
-  "releasedAt": "1996-08-09",
-  "runtime": "93"
+  "name": "Transporter",
+  "releasedAt": "2002-11-10",
+  "runtime": 92
 }
 ###
 
