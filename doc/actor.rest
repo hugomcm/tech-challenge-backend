@@ -1,0 +1,38 @@
+@baseUrl=http://localhost:8080/actors
+@id={{create.response.body.id}}
+
+# @name getAll
+GET {{baseUrl}}
+
+###
+
+# @name create
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "name": "Robert De Niro",
+  "bio": "*** Bio description goes here ***",
+  "bornAt": "1943-08-17"
+}
+###
+
+# @name getOne
+GET {{baseUrl}}/{{id}}
+
+###
+
+# @name update
+PUT {{baseUrl}}/{{id}}
+
+{
+  "name": "Robert De Niro",
+  "bio": "*** Bio description CHANGED goes here ***",
+  "bornAt": "1943-08-17"
+}
+###
+
+# @name remove
+DELETE {{baseUrl}}/{{id}}
+
+###
