@@ -129,7 +129,7 @@ describe('lib', () => describe('movie', () => {
     })
 
     ; [0, 1].forEach( rows =>
-      it(`returns ${!!rows} when (${rows}) row is found and deleted`, async ({context}: Flags) => {
+      it(`returns ${!!rows} when (${rows}) row is found and updated`, async ({context}: Flags) => {
         if(!isContext(context)) throw TypeError()
         const anyId = 123
         const anyName = 'any-name'

@@ -99,8 +99,9 @@ describe('plugin', () => describe('movie', () => {
       if(!isContext(context)) throw TypeError()
       const payload = {
         'name': 'repeated-name',
-        'releasedAt': "2000-01-01",
-        'runtime': 100
+        'synopsis': 'any-synopsis',
+        'releasedAt': new Date("2000-01-01"),
+        'runtime': 120
       }
       const opts: Hapi.ServerInjectOptions = { method, url, payload }
       context.stub.lib_create.rejects({ code: 'ER_DUP_ENTRY'})
@@ -111,7 +112,12 @@ describe('plugin', () => describe('movie', () => {
 
     it('returns HTTP 201, with the `id` and `path` to the row created', async ({ context }: Flags) => {
       if(!isContext(context)) throw TypeError()
-      const payload = {'name': 'any-name', 'synopsis': "any-synopsis", 'releasedAt': new Date("2000-01-01"), 'runtime': 120}
+      const payload = {
+        'name': 'any-name', 
+        'synopsis': "any-synopsis", 
+        'releasedAt': new Date("2000-01-01"), 
+        'runtime': 120
+      }
       const opts: Hapi.ServerInjectOptions = { method, url, payload }
       const anyResult = 123
       context.stub.lib_create.resolves(anyResult)
