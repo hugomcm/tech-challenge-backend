@@ -54,6 +54,31 @@ describe('lib', () => describe('genre', () => {
   afterEach(() => sandbox.resetHistory())
   after(() => sandbox.restore())
 
+  describe('create', () => {
+
+    it('insert one row into table `genre`', async ({context}: Flags) => {
+      if(!isContext(context)) throw TypeError()
+      const anyName = 'any-name'
+      context.stub.knex_insert.resolves([])
+
+      await create(anyName)
+      sinon.assert.calledOnceWithExactly(context.stub.knex_into, 'genre')
+      sinon.assert.calledOnceWithExactly(context.stub.knex_insert, { name: anyName })
+    })
+
+    it('returns the `id` created for the new row', async ({context}: Flags) => {
+      if(!isContext(context)) throw TypeError()
+      const anyName = 'any-name'
+      const anyId = 123
+      context.stub.knex_insert.resolves([anyId])
+
+      const result = await create(anyName)
+      expect(result).to.be.number()
+      expect(result).equals(anyId)
+    })
+
+  })
+
   describe('list', () => {
 
     it('returns rows from table `genre`', async ({context}: Flags) => {
@@ -77,32 +102,6 @@ describe('lib', () => describe('genre', () => {
       sinon.assert.calledOnceWithExactly(context.stub.knex_where, { id: anyId })
       sinon.assert.calledOnce(context.stub.knex_first)
     })
-
-  })
-
-  describe('remove', () => {
-
-    it('removes one row from table `genre`, by `id`', async ({context}: Flags) => {
-      if(!isContext(context)) throw TypeError()
-      const anyId = 123
-      context.stub.knex_delete.resolves()
-
-      await remove(anyId)
-      sinon.assert.calledOnceWithExactly(context.stub.knex_from, 'genre')
-      sinon.assert.calledOnceWithExactly(context.stub.knex_where, { id: anyId })
-      sinon.assert.calledOnce(context.stub.knex_delete)
-    })
-
-    ; [0, 1].forEach( rows =>
-      it(`returns ${!!rows} when (${rows}) row is found and deleted`, async ({context}: Flags) => {
-        if(!isContext(context)) throw TypeError()
-        context.stub.knex_delete.resolves(rows)
-        const anyId = 123
-
-        const result = await remove(anyId)
-        expect(result).to.be.boolean()
-        expect(result).equals(!!rows)
-      }))
 
   })
 
@@ -157,31 +156,6 @@ describe('lib', () => describe('genre', () => {
         expect(result).to.be.boolean()
         expect(result).equals(!!rows)
       }))
-
-  })
-
-  describe('create', () => {
-
-    it('insert one row into table `genre`', async ({context}: Flags) => {
-      if(!isContext(context)) throw TypeError()
-      const anyName = 'any-name'
-      context.stub.knex_insert.resolves([])
-
-      await create(anyName)
-      sinon.assert.calledOnceWithExactly(context.stub.knex_into, 'genre')
-      sinon.assert.calledOnceWithExactly(context.stub.knex_insert, { name: anyName })
-    })
-
-    it('returns the `id` created for the new row', async ({context}: Flags) => {
-      if(!isContext(context)) throw TypeError()
-      const anyName = 'any-name'
-      const anyId = 123
-      context.stub.knex_insert.resolves([anyId])
-
-      const result = await create(anyName)
-      expect(result).to.be.number()
-      expect(result).equals(anyId)
-    })
 
   })
 
