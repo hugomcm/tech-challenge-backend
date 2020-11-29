@@ -1,17 +1,17 @@
 import { knex } from '../util/knex'
 
-export interface Movie {
+export interface Actor {
   id: number
   name: string,
   bio: string, 
   bonrAt: Date
 }
 
-export function list(): Promise<Movie[]> {
+export function list(): Promise<Actor[]> {
   return knex.from('actor').select()
 }
 
-export function find(id: number): Promise<Movie> {
+export function find(id: number): Promise<Actor> {
   return knex.from('actor').where({ id }).first()
 }
 
