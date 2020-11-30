@@ -26,7 +26,7 @@ interface PayloadActor {
   name: string, 
   bio: string, 
   bornAt: Date,
-  movies: actors.MovieRole[]
+  movies: actors.ActorMovie[]
 }
 const validatePayloadActor: RouteOptionsResponseSchema = {
   payload: joi.object({
@@ -62,7 +62,12 @@ export const actorRoutes: ServerRoute[] = [{
   path: '/actors/{id}',
   handler: remove,
   options: { validate: validateParamsId },
-},]
+},{
+  method: 'GET',
+  path: '/actors/{id}/movies',
+  handler: getMovies,
+  options: { validate: validateParamsId },
+}]
 
 
 async function getAll(_req: Request, _h: ResponseToolkit, _err?: Error): Promise<Lifecycle.ReturnValue> {
@@ -124,4 +129,12 @@ async function remove(req: Request, h: ResponseToolkit, _err?: Error): Promise<L
   const { id } = (req.params as ParamsId)
 
   return await actors.remove(id) ? h.response().code(204) : Boom.notFound()
+}
+
+// MG-0004 View Actor's movie appearances
+async function getMovies(req: Request, _h: ResponseToolkit, _err?: Error): Promise<Lifecycle.ReturnValue> {
+  const { id } = (req.params as ParamsId)
+
+  const found = await actors.listMovies(id)
+  return found || Boom.notFound()
 }

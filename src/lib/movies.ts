@@ -73,3 +73,8 @@ export async function update(id: number, name: string, synopsis: string, release
     return count > 0
   })
 }
+
+// changes for MG-0004 View Actor's movie appearances
+export function listByIds(ids: number[]): Promise<Movie[]> {
+  return knex.from('movie').select().whereIn('id', ids)
+}
