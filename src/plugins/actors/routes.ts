@@ -25,13 +25,15 @@ const validateParamsId: RouteOptionsValidate = {
 interface PayloadActor {
   name: string, 
   bio: string, 
-  bornAt: Date
+  bornAt: Date,
+  movies: actors.MovieRole[]
 }
 const validatePayloadActor: RouteOptionsResponseSchema = {
   payload: joi.object({
     name: joi.string().required(),
     bio: joi.string().required(),
-    bornAt: joi.date().required()
+    bornAt: joi.date().required(),
+    movies: joi.array()
   })
 }
 
@@ -75,10 +77,10 @@ async function get(req: Request, _h: ResponseToolkit, _err?: Error): Promise<Lif
 }
 
 async function post(req: Request, h: ResponseToolkit, _err?: Error): Promise<Lifecycle.ReturnValue> {
-  const { name, bio, bornAt } = (req.payload as PayloadActor)
+  const { name, bio, bornAt, movies } = (req.payload as PayloadActor)
 
   try {
-    const id = await actors.create(name, bio, bornAt)
+    const id = await actors.create(name, bio, bornAt, movies)
     const result = {
       id,
       path: `${req.route.path}/${id}`
@@ -86,21 +88,35 @@ async function post(req: Request, h: ResponseToolkit, _err?: Error): Promise<Lif
     return h.response(result).code(201)
   }
   catch(er: unknown){
-    if(!isHasCode(er) || er.code !== 'ER_DUP_ENTRY') throw er
-    return Boom.conflict()
+    if(isHasCode(er)){
+      if(er.code === 'ER_DUP_ENTRY'){
+        return Boom.conflict()
+      }
+      else if(er.code === 'ER_NO_REFERENCED_ROW_2'){
+        return Boom.preconditionFailed()
+      }
+    }
+    throw er;
   }
 }
 
 async function put(req: Request, h: ResponseToolkit, _err?: Error): Promise<Lifecycle.ReturnValue> {
   const { id } = (req.params as ParamsId)
-  const { name, bio, bornAt } = (req.payload as PayloadActor)
+  const { name, bio, bornAt, movies } = (req.payload as PayloadActor)
 
   try {
-    return await actors.update(id, name, bio, bornAt) ? h.response().code(204) : Boom.notFound()
+    return await actors.update(id, name, bio, bornAt, movies) ? h.response().code(204) : Boom.notFound()
   }
   catch(er: unknown){
-    if(!isHasCode(er) || er.code !== 'ER_DUP_ENTRY') throw er
-    return Boom.conflict()
+    if(isHasCode(er)){
+      if(er.code === 'ER_DUP_ENTRY'){
+        return Boom.conflict()
+      }
+      else if(er.code === 'ER_NO_REFERENCED_ROW_2'){
+        return Boom.preconditionFailed()
+      }
+    }
+    throw er;
   }
 }
 

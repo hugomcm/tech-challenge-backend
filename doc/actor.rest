@@ -13,7 +13,10 @@ Content-Type: application/json
 {
   "name": "Robert De Niro",
   "bio": "*** Bio description goes here ***",
-  "bornAt": "1943-08-17"
+  "bornAt": "1943-08-17",
+  "movies": [
+    { "movie_id": 4, "character_name": "Travis Bickle" }
+  ]
 }
 ###
 
@@ -28,7 +31,11 @@ PUT {{baseUrl}}/{{id}}
 {
   "name": "Robert De Niro",
   "bio": "*** Bio description CHANGED goes here ***",
-  "bornAt": "1943-08-17"
+  "bornAt": "1943-08-17",
+  "movies": [
+    { "movie_id": 4, "character_name": "Travis Bickle" },
+    { "movie_id": 3, "character_name": "A madeup character" }
+  ]
 }
 ###
 
