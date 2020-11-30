@@ -17,7 +17,7 @@
     "db:dev:mmake": "knex --knexfile src/knexfile.ts migrate:make",
     "db:dev:smake": "knex --knexfile src/knexfile.ts seed:make",
     "db:dev:populate": "knex --knexfile src/knexfile.ts seed:run --specific=data.ts",
-    "db:dev:cleanup": "knex --knexfile src/knexfile.ts seed:run --specific=clean.ts",
+    "db:dev:clean": "knex --knexfile src/knexfile.ts seed:run --specific=clean.ts",
     "lint:tdd": "nodemon --watch ./src --ext ts  --exec npm run lint",
     "lint": "eslint . --ext .ts",
     "test:tdd": "nodemon --delay 0.01 --inspect=7001 --watch ./src --ext ts,json --exec npm test",
