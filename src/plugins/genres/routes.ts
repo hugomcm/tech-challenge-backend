@@ -23,11 +23,13 @@ const validateParamsId: RouteOptionsValidate = {
 }
 
 interface PayloadGenre {
-  name: string
+  name: string,
+  movies: genres.GenreMovie[]
 }
 const validatePayloadGenre: RouteOptionsResponseSchema = {
   payload: joi.object({
     name: joi.string().required(),
+    movies: joi.array()
   })
 }
 
@@ -71,10 +73,10 @@ async function get(req: Request, _h: ResponseToolkit, _err?: Error): Promise<Lif
 }
 
 async function post(req: Request, h: ResponseToolkit, _err?: Error): Promise<Lifecycle.ReturnValue> {
-  const { name } = (req.payload as PayloadGenre)
+  const { name, movies } = (req.payload as PayloadGenre)
 
   try {
-    const id = await genres.create(name)
+    const id = await genres.create(name, movies)
     const result = {
       id,
       path: `${req.route.path}/${id}`
@@ -82,21 +84,35 @@ async function post(req: Request, h: ResponseToolkit, _err?: Error): Promise<Lif
     return h.response(result).code(201)
   }
   catch(er: unknown){
-    if(!isHasCode(er) || er.code !== 'ER_DUP_ENTRY') throw er
-    return Boom.conflict()
+    if(isHasCode(er)){
+      if(er.code === 'ER_DUP_ENTRY'){
+        return Boom.conflict()
+      }
+      else if(er.code === 'ER_NO_REFERENCED_ROW_2'){
+        return Boom.preconditionFailed()
+      }
+    }
+    throw er;
   }
 }
 
 async function put(req: Request, h: ResponseToolkit, _err?: Error): Promise<Lifecycle.ReturnValue> {
   const { id } = (req.params as ParamsId)
-  const { name } = (req.payload as PayloadGenre)
+  const { name, movies } = (req.payload as PayloadGenre)
 
   try {
-    return await genres.update(id, name) ? h.response().code(204) : Boom.notFound()
+    return await genres.update(id, name, movies) ? h.response().code(204) : Boom.notFound()
   }
   catch(er: unknown){
-    if(!isHasCode(er) || er.code !== 'ER_DUP_ENTRY') throw er
-    return Boom.conflict()
+    if(isHasCode(er)){
+      if(er.code === 'ER_DUP_ENTRY'){
+        return Boom.conflict()
+      }
+      else if(er.code === 'ER_NO_REFERENCED_ROW_2'){
+        return Boom.preconditionFailed()
+      }
+    }
+    throw er;
   }
 }
 

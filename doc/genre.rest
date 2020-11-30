@@ -28,6 +28,17 @@ PUT {{baseUrl}}/{{id}}
 }
 ###
 
+# @name update
+PUT {{baseUrl}}/4
+
+{
+  "name": "Crime",
+  "movies": [
+    { "movie_id": 4 }
+  ]
+}
+###
+
 # @name remove
 DELETE {{baseUrl}}/{{id}}
 
