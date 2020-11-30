@@ -7,4 +7,8 @@ export async function seed(knex: Knex): Promise<void> {
   await knex('actor').del()
   await knex('actor_movie').del()
   await knex('genre_movie').del()
+  
+  await knex.raw('ALTER TABLE genre AUTO_INCREMENT = 1')
+  await knex.raw('ALTER TABLE movie AUTO_INCREMENT = 1')
+  await knex.raw('ALTER TABLE actor AUTO_INCREMENT = 1')
 }

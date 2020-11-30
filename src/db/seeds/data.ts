@@ -7,6 +7,10 @@ export async function seed(knex: Knex): Promise<void> {
   await knex('actor').del()
   await knex('actor_movie').del()
   await knex('genre_movie').del()
+    
+  await knex.raw('ALTER TABLE genre AUTO_INCREMENT = 1')
+  await knex.raw('ALTER TABLE movie AUTO_INCREMENT = 1')
+  await knex.raw('ALTER TABLE actor AUTO_INCREMENT = 1')
 
   
   // id    INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -30,9 +34,10 @@ export async function seed(knex: Knex): Promise<void> {
   // releasedAt  DATE NOT NULL,
   // runtime     SMALLINT NOT NULL,
   await knex('movie').insert([
-    { id: 1, name: 'Transporter', synopsis: null, releasedAt: '2002-11-10', runtime: 92 },
-    { id: 2, name: 'The Italian Job', synopsis: null, releasedAt: '2003-05-30', runtime: 111 },
-    { id: 3, name: 'Mad Max: Fury Road', synopsis: null, releasedAt: '2015-05-15', runtime: 120 }
+    { id: 1, name: 'Transporter', synopsis: "Frank Martin, who transports packages for unknown clients, is asked to move a package that soon begins moving, and complications arise.", releasedAt: '2002-11-10', runtime: 92 },
+    { id: 2, name: 'The Italian Job', releasedAt: '2003-05-30', runtime: 111 },
+    { id: 3, name: 'Mad Max: Fury Road', releasedAt: '2015-05-15', runtime: 120 },
+    { id: 4, name: 'Taxi Driver', synopsis: "A mentally unstable veteran works as a nighttime taxi driver in New York City, where the perceived decadence and sleaze fuels his urge for violent action by attempting to liberate a presidential campaign worker and an underage prostitute.", releasedAt: '1976-02-09', runtime: 116 }
   ])
 
   // id      INT UNSIGNED NOT NULL AUTO_INCREMENT,
