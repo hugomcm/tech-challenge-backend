@@ -29,10 +29,10 @@ PUT {{baseUrl}}/{{id}}
 ###
 
 # @name update
-PUT {{baseUrl}}/4
+PUT {{baseUrl}}/{{id}}
 
 {
-  "name": "Crime",
+  "name": "potato-{{$guid}}",
   "movies": [
     { "movie_id": 4 }
   ]
