@@ -28,7 +28,7 @@ interface PayloadMovie {
   releasedAt: Date, 
   runtime: number,
   actors: movies.MovieActor[],
-  genres: movies.MovieGenre[]
+  genres: number[]
 }
 const validatePayloadMovie: RouteOptionsResponseSchema = {
   payload: joi.object({

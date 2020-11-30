@@ -24,7 +24,7 @@ const validateParamsId: RouteOptionsValidate = {
 
 interface PayloadGenre {
   name: string,
-  movies: genres.GenreMovie[]
+  movies: number[]
 }
 const validatePayloadGenre: RouteOptionsResponseSchema = {
   payload: joi.object({

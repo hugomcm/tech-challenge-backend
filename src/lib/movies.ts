@@ -7,15 +7,12 @@ export interface Movie {
   releasedAt: Date, 
   runtime: number
   actors: MovieActor[],
-  genres: MovieGenre[]
+  genres: number[]
 }
 
 export interface MovieActor {
   actor_id: number,
   character_name: string
-}
-export interface MovieGenre {
-  genre_id: number
 }
 
 
@@ -32,7 +29,7 @@ export function find(id: number): Promise<Movie> {
   ])
     .then(([ movie, movieActors, movieGenres ]) => {
       if(!movie) throw(`No movie with id: ${id}`)
-      return { ...movie, actors: movieActors, genres: movieGenres }
+      return { ...movie, actors: movieActors, genres: movieGenres.map(({ genre_id }) => genre_id) }
     })
     .catch((err) => undefined)
 }
@@ -44,16 +41,14 @@ export async function remove(id: number): Promise<boolean> {
 }
 
 /** @returns the ID that was created */
-export async function create(name: string, synopsis: string, releasedAt: Date, runtime: number, actors: MovieActor[], genres: MovieGenre[]): Promise<number> {
-  // const [ id ] = await (knex.into('movie').insert({ name, synopsis, releasedAt, runtime }))
-  // return id
+export async function create(name: string, synopsis: string, releasedAt: Date, runtime: number, actors: MovieActor[], genres: number[]): Promise<number> {
   return await knex.transaction(async trx => {    
     const [ id ] = await (trx.into('movie').insert({ name, synopsis, releasedAt, runtime }))
     if(!!actors && actors instanceof Array){
       await knex.into('actor_movie').insert(actors.map(aa => ({ movie_id: id, ...aa }))).transacting(trx)
     }
     if(!!genres && genres instanceof Array){
-      await knex.into('genre_movie').insert(genres.map(ag => ({ movie_id: id, ...ag }))).transacting(trx)
+      await knex.into('genre_movie').insert(genres.map(genre_id => ({ movie_id: id, genre_id }))).transacting(trx)
     }
 
     return id
@@ -61,9 +56,7 @@ export async function create(name: string, synopsis: string, releasedAt: Date, r
 }
 
 /** @returns whether the ID was actually found */
-export async function update(id: number, name: string, synopsis: string, releasedAt: Date, runtime: number, actors: MovieActor[], genres: MovieGenre[]): Promise<boolean>  {
-  // const count = await knex.from('movie').where({ id }).update({ name, synopsis, releasedAt, runtime })
-  // return count > 0
+export async function update(id: number, name: string, synopsis: string, releasedAt: Date, runtime: number, actors: MovieActor[], genres: number[]): Promise<boolean>  {
   return await knex.transaction(async trx => { 
     const count = await knex.from('movie').where({ id }).update({ name, synopsis, releasedAt, runtime })
 
@@ -74,7 +67,7 @@ export async function update(id: number, name: string, synopsis: string, release
 
     if(!!genres && genres instanceof Array){
       await knex.from('genre_movie').where({ movie_id: id }).delete().transacting(trx) 
-      await knex.into('genre_movie').insert(genres.map(ag => ({ movie_id: id, ...ag }))).transacting(trx)
+      await knex.into('genre_movie').insert(genres.map(genre_id => ({ movie_id: id, genre_id }))).transacting(trx)
     }
 
     return count > 0

@@ -17,11 +17,7 @@ Content-Type: application/json
   "actors": [
     { "actor_id": 1, "character_name": "Frank Martin" }
   ],
-  "genres": [
-    { "genre_id": 1 },
-    { "genre_id": 4 },
-    { "genre_id": 8 }
-  ]
+  "genres": [1, 4, 8]
 }
 ###
 
@@ -53,10 +49,7 @@ PUT {{baseUrl}}/{{id}}
   "synopsis": "Transporter Frank Martin, surfaces in Miami, Florida and is implicated in the kidnapping of the young son of a powerful USA official.",
   "releasedAt": "2005-09-02",
   "runtime": 87,
-  "genres": [
-    { "genre_id": 1 },
-    { "genre_id": 8 }
-  ]
+  "genres": [1, 8]
 }
 ###
 
