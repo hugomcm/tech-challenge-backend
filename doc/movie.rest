@@ -13,7 +13,15 @@ Content-Type: application/json
 {
   "name": "Transporter 2",
   "releasedAt": "2005-09-02",
-  "runtime": 87
+  "runtime": 0,
+  "actors": [
+    { "actor_id": 1, "character_name": "Frank Martin" }
+  ],
+  "genres": [
+    { "genre_id": 1 },
+    { "genre_id": 4 },
+    { "genre_id": 8 }
+  ]
 }
 ###
 
@@ -29,7 +37,26 @@ PUT {{baseUrl}}/{{id}}
   "name": "Transporter 2",
   "synopsis": "Transporter Frank Martin, surfaces in Miami, Florida and is implicated in the kidnapping of the young son of a powerful USA official.",
   "releasedAt": "2005-09-02",
-  "runtime": 87
+  "runtime": 87,
+  "actors": [
+    { "actor_id": 1, "character_name": "Frank Martin" },
+    { "actor_id": 2, "character_name": "Made up character" }
+  ]
+}
+###
+
+# @name update
+PUT {{baseUrl}}/{{id}}
+
+{
+  "name": "Transporter 2",
+  "synopsis": "Transporter Frank Martin, surfaces in Miami, Florida and is implicated in the kidnapping of the young son of a powerful USA official.",
+  "releasedAt": "2005-09-02",
+  "runtime": 87,
+  "genres": [
+    { "genre_id": 1 },
+    { "genre_id": 8 }
+  ]
 }
 ###
 
