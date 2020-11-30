@@ -15,6 +15,20 @@ Content-Type: application/json
 }
 ###
 
+# @name create
+POST {{baseUrl}}
+Content-Type: application/json
+
+{
+  "name": "jose2-{{$guid}}",
+  "movies": [
+    { "movie_id": 1 },
+    { "movie_id": 2 },
+    { "movie_id": 3 }
+  ]
+}
+###
+
 # @name getOne
 GET {{baseUrl}}/{{id}}
 
