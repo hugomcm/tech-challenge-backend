@@ -37,11 +37,15 @@ export async function remove(id: number): Promise<boolean> {
 }
 
 /** @returns the ID that was created */
-export async function create(name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[]): Promise<number> {
+export async function create(name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[] = []): Promise<number> {
+  // const [ id ] = await knex.into('actor').insert({ name, bio, bornAt })
+  // return id
+
   return await knex.transaction(async trx => {    
-    const [ id ] = await (trx.into('actor').insert({ name, bio, bornAt }));
+    const [ id ] = await trx.into('actor').insert({ name, bio, bornAt });
+    // console.log('id', id);
     if(!!actorMovies && actorMovies instanceof Array){
-      await knex.into('actor_movie').insert(actorMovies.map(am => ({ actor_id: id, ...am }))).transacting(trx)
+      await trx.into('actor_movie').insert(actorMovies.map(am => ({ actor_id: id, ...am })))
     }
 
     return id
@@ -49,7 +53,7 @@ export async function create(name: string, bio: string, bornAt: Date, actorMovie
 }
 
 /** @returns whether the ID was actually found */
-export async function update(id: number, name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[]): Promise<boolean>  {
+export async function update(id: number, name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[] = []): Promise<boolean>  {
   return await knex.transaction(async trx => { 
     const count = await knex.from('actor').where({ id }).update({ name, bio, bornAt })
 
