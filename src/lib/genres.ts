@@ -37,7 +37,6 @@ export async function create(name: string, movies: GenreMovie[]): Promise<number
   return await knex.transaction(async trx => {    
     const [ id ] = await (trx.into('genre').insert({ name }));
     if(!!movies && movies instanceof Array){
-      await knex.from('genre_movie').where({ genre_id: id }).delete().transacting(trx)
       await knex.into('genre_movie').insert(movies.map(am => ({ genre_id: id, ...am }))).transacting(trx)
     }
 
