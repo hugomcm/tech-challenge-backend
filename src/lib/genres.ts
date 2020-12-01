@@ -33,7 +33,7 @@ export async function create(name: string, movies: number[] = []): Promise<numbe
   return await knex.transaction(async trx => {    
     const [ id ] = await (trx.into('genre').insert({ name }));
     if(!!movies && movies instanceof Array){
-      await knex.into('genre_movie').insert(movies.map(movie_id => ({ genre_id: id, movie_id }))).transacting(trx)
+      await trx.into('genre_movie').insert(movies.map(movie_id => ({ genre_id: id, movie_id })))
     }
 
     return id
@@ -47,8 +47,8 @@ export async function update(id: number, name: string, movies: number[] = []): P
     const count = await knex.from('genre').where({ id }).update({ name })
 
     if(!!movies && movies instanceof Array) {
-      await knex.from('genre_movie').where({ genre_id: id }).delete().transacting(trx)
-      await knex.into('genre_movie').insert(movies.map(movie_id => ({ genre_id: id, movie_id }))).transacting(trx)
+      await trx.from('genre_movie').where({ genre_id: id }).delete()
+      await trx.into('genre_movie').insert(movies.map(movie_id => ({ genre_id: id, movie_id })))
     }
 
     return count > 0
