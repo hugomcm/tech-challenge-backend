@@ -51,8 +51,3 @@ PUT {{baseUrl}}/{{id}}
 DELETE {{baseUrl}}/{{id}}
 
 ###
-
-# @name getActorsOrderedByMovieAppearance
-GET {{baseUrl}}/{{id}}/actors-ordered-by-movie-appearance
-
-###
