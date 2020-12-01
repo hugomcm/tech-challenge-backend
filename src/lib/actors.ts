@@ -7,7 +7,7 @@ export interface Actor {
   name: string,
   bio: string, 
   bornAt: Date,
-  movies: ActorMovie[]
+  movies?: ActorMovie[]
 }
 export interface ActorMovie {
   movie_id: number,
@@ -40,7 +40,7 @@ export async function remove(id: number): Promise<boolean> {
 }
 
 /** @returns the ID that was created */
-export async function create(name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[]): Promise<number> {
+export async function create(name: string, bio: string, bornAt: Date, actorMovies?: ActorMovie[]): Promise<number> {
   return await knex.transaction(async trx => {    
     const [ id ] = await trx.into('actor').insert({ name, bio, bornAt });
     if(!!actorMovies && actorMovies instanceof Array){
@@ -52,7 +52,7 @@ export async function create(name: string, bio: string, bornAt: Date, actorMovie
 }
 
 /** @returns whether the ID was actually found */
-export async function update(id: number, name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[]): Promise<boolean>  {
+export async function update(id: number, name: string, bio: string, bornAt: Date, actorMovies?: ActorMovie[]): Promise<boolean>  {
   // check if actor exists
   const actor = await knex.from('actor').where({ id }).first()
   if(!actor) return actor;
