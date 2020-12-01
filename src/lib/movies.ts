@@ -61,13 +61,11 @@ export async function update(id: number, name: string, synopsis: string, release
   return await knex.transaction(async trx => { 
     const count = await knex.from('movie').where({ id }).update({ name, synopsis, releasedAt, runtime })
 
-    console.log('-----')
-    console.log(!!actors && actors instanceof Array)
     if(!!actors && actors instanceof Array) {
       await trx.from('actor_movie').where({ movie_id: id }).delete()
       await trx.into('actor_movie').insert(actors.map(aa => ({ movie_id: id, ...aa })))
     }
-    console.log(!!genres && genres instanceof Array)
+    
     if(!!genres && genres instanceof Array){
       await trx.from('genre_movie').where({ movie_id: id }).delete()
       await trx.into('genre_movie').insert(genres.map(genre_id => ({ movie_id: id, genre_id })))
