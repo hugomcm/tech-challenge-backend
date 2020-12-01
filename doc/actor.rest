@@ -51,7 +51,13 @@ GET {{baseUrl}}/{{id}}/movies
 ###
 
 # @name getNrMoviesByGenre
-# MG-0005 View Actor's number of Movies in Genres | As a user, I want to get the number of movies by genre on an actor profile page.
-GET {{baseUrl}}/{{id}}/nr-movies-by-genre
+# MG-0005 View Actor's number of Movies in Genres
+GET {{baseUrl}}/{{id}}/genres/nr-movies
+
+###
+
+# @name getListOfCharacterNames
+# MG-0006. View Actor's character names
+GET {{baseUrl}}/{{id}}/character-names
 
 ###

@@ -69,8 +69,13 @@ export const actorRoutes: ServerRoute[] = [{
   options: { validate: validateParamsId },
 },{
   method: 'GET',
-  path: '/actors/{id}/nr-movies-by-genre',
+  path: '/actors/{id}/genres/nr-movies',
   handler: getNrMoviesByGenre,
+  options: { validate: validateParamsId },
+},{
+  method: 'GET',
+  path: '/actors/{id}/character-names',
+  handler: getListOfCharacterNames,
   options: { validate: validateParamsId },
 }]
 
@@ -144,10 +149,20 @@ async function getMovies(req: Request, _h: ResponseToolkit, _err?: Error): Promi
   return found || Boom.notFound()
 }
 
-// MG-0005 View Actor's number of Movies in Genres | As a user, I want to get the number of movies by genre on an actor profile page.
+// MG-0005 View Actor's number of Movies in Genres
+// As a user, I want to get the number of movies by genre on an actor profile page.
 async function getNrMoviesByGenre(req: Request, _h: ResponseToolkit, _err?: Error): Promise<Lifecycle.ReturnValue> {
   const { id } = (req.params as ParamsId)
 
   const found = await actors.countNrMoviesByGenre(id)
+  return found || Boom.notFound()
+}
+
+// MG-0006. View Actor's character names
+// As a user, I want to get a list of character names of a given Actor.
+async function getListOfCharacterNames(req: Request, _h: ResponseToolkit, _err?: Error): Promise<Lifecycle.ReturnValue> {
+  const { id } = (req.params as ParamsId)
+
+  const found = await actors.listOfCharacters(id)
   return found || Boom.notFound()
 }

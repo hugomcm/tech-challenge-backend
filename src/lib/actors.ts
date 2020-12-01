@@ -80,7 +80,8 @@ export async function listMovies(id: number): Promise<movies.Movie[]> {
   return await movies.listByIds(movieIds);
 }
 
-// MG-0005 View Actor's number of Movies in Genres | As a user, I want to get the number of movies by genre on an actor profile page.
+// MG-0005 View Actor's number of Movies in Genres
+// As a user, I want to get the number of movies by genre on an actor profile page.
 export async function countNrMoviesByGenre(id: number): Promise<NrMoviesByGenre[]> {
   // check if actor exists
   const actor = await knex.from('actor').where({ id }).first()
@@ -98,3 +99,17 @@ export async function countNrMoviesByGenre(id: number): Promise<NrMoviesByGenre[
   const [ nrMoviesByGenre ] = await knex.raw(query, { id })
   return nrMoviesByGenre
 }
+
+// MG-0006. View Actor's character names
+// As a user, I want to get a list of character names of a given Actor.
+export async function listOfCharacters(id: number): Promise<NrMoviesByGenre[]> {
+  // check if actor exists
+  const actor = await knex.from('actor').where({ id }).first()
+  if(!actor) return actor;
+
+  return await knex
+    .from('actor_movie')
+    .where({ actor_id: id })
+    .select('actor_id', 'movie_id', 'character_name');
+}
+
