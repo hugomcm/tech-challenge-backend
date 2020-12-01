@@ -13,6 +13,11 @@ export interface ActorMovie {
   movie_id: number,
   character_name: string
 }
+export interface NrMoviesByGenre {
+  id: number,
+  name: string,
+  moviesQnt: number
+}
 
 export function list(): Promise<Actor[]> {
   return knex.from('actor').select()
@@ -43,7 +48,6 @@ export async function create(name: string, bio: string, bornAt: Date, actorMovie
 
   return await knex.transaction(async trx => {    
     const [ id ] = await trx.into('actor').insert({ name, bio, bornAt });
-    // console.log('id', id);
     if(!!actorMovies && actorMovies instanceof Array){
       await trx.into('actor_movie').insert(actorMovies.map(am => ({ actor_id: id, ...am })))
     }
@@ -58,8 +62,8 @@ export async function update(id: number, name: string, bio: string, bornAt: Date
     const count = await knex.from('actor').where({ id }).update({ name, bio, bornAt })
 
     if(!!actorMovies && actorMovies instanceof Array) {
-      await knex.from('actor_movie').where({ actor_id: id }).delete().transacting(trx)
-      await knex.into('actor_movie').insert(actorMovies.map(am => ({ actor_id: id, ...am }))).transacting(trx)
+      await trx.from('actor_movie').where({ actor_id: id }).delete()
+      await trx.into('actor_movie').insert(actorMovies.map(am => ({ actor_id: id, ...am })))
     }
 
     return count > 0
@@ -71,4 +75,19 @@ export async function listMovies(id: number): Promise<movies.Movie[]> {
   const actorMovies = await knex.from('actor_movie').where({ actor_id: id }).select()
   const movieIds: number[] = actorMovies.map(({ movie_id }) => movie_id)
   return await movies.listByIds(movieIds);
+}
+
+// MG-0005 View Actor's number of Movies in Genres | As a user, I want to get the number of movies by genre on an actor profile page.
+export async function countNrMoviesByGenre(id: number): Promise<NrMoviesByGenre[]> {
+  const query = `
+    SELECT g.id, g.name, nmbg.moviesQnt FROM 
+      (SELECT gm.genre_id, count(am.movie_id) moviesQnt
+      FROM movies.actor_movie am 
+      INNER JOIN movies.genre_movie gm ON am.movie_id = gm.movie_id 
+      WHERE am.actor_id = :id 
+      GROUP BY gm.genre_id) nmbg
+    INNER JOIN movies.genre g ON g.id = nmbg.genre_id
+  `
+  const [ nrMoviesByGenre ] = await knex.raw(query, { id })
+  return nrMoviesByGenre
 }

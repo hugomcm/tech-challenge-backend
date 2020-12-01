@@ -67,6 +67,11 @@ export const actorRoutes: ServerRoute[] = [{
   path: '/actors/{id}/movies',
   handler: getMovies,
   options: { validate: validateParamsId },
+},{
+  method: 'GET',
+  path: '/actors/{id}/nr-movies-by-genre',
+  handler: getNrMoviesByGenre,
+  options: { validate: validateParamsId },
 }]
 
 
@@ -136,5 +141,13 @@ async function getMovies(req: Request, _h: ResponseToolkit, _err?: Error): Promi
   const { id } = (req.params as ParamsId)
 
   const found = await actors.listMovies(id)
+  return found || Boom.notFound()
+}
+
+// MG-0005 View Actor's number of Movies in Genres | As a user, I want to get the number of movies by genre on an actor profile page.
+async function getNrMoviesByGenre(req: Request, _h: ResponseToolkit, _err?: Error): Promise<Lifecycle.ReturnValue> {
+  const { id } = (req.params as ParamsId)
+
+  const found = await actors.countNrMoviesByGenre(id)
   return found || Boom.notFound()
 }
