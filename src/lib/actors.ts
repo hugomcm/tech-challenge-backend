@@ -29,10 +29,8 @@ export function find(id: number): Promise<Actor> {
     knex.from('actor_movie').where({ actor_id: id }).select('movie_id', 'character_name')
   ])
     .then(([ actor, actorMovies ]) => {
-      if(!actor) throw(`No actor with id: ${id}`)
-      return { ...actor, movies: actorMovies }
+      return (!actor)? actor: { ...actor, movies: actorMovies };
     })
-    .catch((err) => undefined)
 }
 
 /** @returns whether the ID was actually found */
@@ -42,10 +40,7 @@ export async function remove(id: number): Promise<boolean> {
 }
 
 /** @returns the ID that was created */
-export async function create(name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[] = []): Promise<number> {
-  // const [ id ] = await knex.into('actor').insert({ name, bio, bornAt })
-  // return id
-
+export async function create(name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[]): Promise<number> {
   return await knex.transaction(async trx => {    
     const [ id ] = await trx.into('actor').insert({ name, bio, bornAt });
     if(!!actorMovies && actorMovies instanceof Array){
@@ -57,7 +52,11 @@ export async function create(name: string, bio: string, bornAt: Date, actorMovie
 }
 
 /** @returns whether the ID was actually found */
-export async function update(id: number, name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[] = []): Promise<boolean>  {
+export async function update(id: number, name: string, bio: string, bornAt: Date, actorMovies: ActorMovie[]): Promise<boolean>  {
+  // check if actor exists
+  const actor = await knex.from('actor').where({ id }).first()
+  if(!actor) return actor;
+
   return await knex.transaction(async trx => { 
     const count = await knex.from('actor').where({ id }).update({ name, bio, bornAt })
 
@@ -72,6 +71,10 @@ export async function update(id: number, name: string, bio: string, bornAt: Date
 
 // MG-0004 View Actor's movie appearances
 export async function listMovies(id: number): Promise<movies.Movie[]> {
+  // check if actor exists
+  const actor = await knex.from('actor').where({ id }).first()
+  if(!actor) return actor;
+
   const actorMovies = await knex.from('actor_movie').where({ actor_id: id }).select()
   const movieIds: number[] = actorMovies.map(({ movie_id }) => movie_id)
   return await movies.listByIds(movieIds);
@@ -79,6 +82,10 @@ export async function listMovies(id: number): Promise<movies.Movie[]> {
 
 // MG-0005 View Actor's number of Movies in Genres | As a user, I want to get the number of movies by genre on an actor profile page.
 export async function countNrMoviesByGenre(id: number): Promise<NrMoviesByGenre[]> {
+  // check if actor exists
+  const actor = await knex.from('actor').where({ id }).first()
+  if(!actor) return actor;
+  
   const query = `
     SELECT g.id, g.name, nmbg.moviesQnt FROM 
       (SELECT gm.genre_id, count(am.movie_id) moviesQnt

@@ -11,7 +11,7 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-  "name": "Transporter 2",
+  "name": "Transporter 2-{{$guid}}",
   "releasedAt": "2005-09-02",
   "runtime": 0,
   "actors": [
@@ -30,7 +30,7 @@ GET {{baseUrl}}/{{id}}
 PUT {{baseUrl}}/{{id}}
 
 {
-  "name": "Transporter 2",
+  "name": "Transporter 2-{{$guid}}",
   "synopsis": "Transporter Frank Martin, surfaces in Miami, Florida and is implicated in the kidnapping of the young son of a powerful USA official.",
   "releasedAt": "2005-09-02",
   "runtime": 87,
@@ -45,7 +45,7 @@ PUT {{baseUrl}}/{{id}}
 PUT {{baseUrl}}/{{id}}
 
 {
-  "name": "Transporter 2",
+  "name": "Transporter 2-{{$guid}}",
   "synopsis": "Transporter Frank Martin, surfaces in Miami, Florida and is implicated in the kidnapping of the young son of a powerful USA official.",
   "releasedAt": "2005-09-02",
   "runtime": 87,

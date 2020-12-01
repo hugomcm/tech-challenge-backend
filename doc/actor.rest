@@ -11,7 +11,7 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-  "name": "Robert De Niro",
+  "name": "Robert-{{$guid}}",
   "bio": "*** Bio description goes here ***",
   "bornAt": "1943-08-17",
   "movies": [

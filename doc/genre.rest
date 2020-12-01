@@ -11,7 +11,7 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-  "name": "jose-{{$guid}}"
+  "name": "genre-{{$guid}}"
 }
 ###
 
@@ -20,7 +20,7 @@ POST {{baseUrl}}
 Content-Type: application/json
 
 {
-  "name": "jose2-{{$guid}}",
+  "name": "genre-{{$guid}}",
   "movies": [1, 2, 3]
 }
 ###
@@ -34,7 +34,7 @@ GET {{baseUrl}}/{{id}}
 PUT {{baseUrl}}/{{id}}
 
 {
-  "name": "potato-{{$guid}}"
+  "name": "genreUpd-{{$guid}}"
 }
 ###
 
@@ -42,12 +42,17 @@ PUT {{baseUrl}}/{{id}}
 PUT {{baseUrl}}/{{id}}
 
 {
-  "name": "potato-{{$guid}}",
+  "name": "genreUpd-{{$guid}}",
   "movies": [4]
 }
 ###
 
 # @name remove
 DELETE {{baseUrl}}/{{id}}
+
+###
+
+# @name getActorsOrderedByMovieAppearance
+GET {{baseUrl}}/{{id}}/actors-ordered-by-movie-appearance
 
 ###
