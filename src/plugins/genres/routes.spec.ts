@@ -107,7 +107,7 @@ describe('plugin', () => describe('genre', () => {
 
     it('returns HTTP 201, with the `id` and `path` to the row created', async ({ context }: Flags) => {
       if(!isContext(context)) throw TypeError()
-      const payload = {'name': 'any-name'}
+      const payload = {'name': 'any-name', 'movies': undefined}
       const opts: Hapi.ServerInjectOptions = { method, url, payload }
       const anyResult = 123
       context.stub.lib_create.resolves(anyResult)
@@ -115,7 +115,7 @@ describe('plugin', () => describe('genre', () => {
       const response = await context.server.inject(opts)
       expect(response.statusCode).equals(201)
 
-      sinon.assert.calledOnceWithExactly(context.stub.lib_create, payload.name)
+      sinon.assert.calledOnceWithExactly(context.stub.lib_create, payload.name, payload.movies)
       expect(response.result).equals({
         id: anyResult,
         path: `/genres/${anyResult}`
@@ -162,7 +162,7 @@ describe('plugin', () => describe('genre', () => {
 
   describe('PUT /genres/:id', () => {
     const paramId = 123
-    const [method, url, payload] = ['PUT', `/genres/${paramId}`, {'name': 'any-name'}]
+    const [method, url, payload] = ['PUT', `/genres/${paramId}`, {'name': 'any-name', movies: undefined}]
 
     it('validates payload is not empty', async ({ context }: Flags) => {
       if(!isContext(context)) throw TypeError()
@@ -207,7 +207,7 @@ describe('plugin', () => describe('genre', () => {
       const response = await context.server.inject(opts)
       expect(response.statusCode).equals(204)
 
-      sinon.assert.calledOnceWithExactly(context.stub.lib_update, paramId, payload.name)
+      sinon.assert.calledOnceWithExactly(context.stub.lib_update, paramId, payload.name, payload.movies)
       expect(response.result).to.be.null()
     })
 
